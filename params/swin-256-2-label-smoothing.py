@@ -1,12 +1,13 @@
+from __future__ import annotations
 import numpy as np
 from monai.networks.nets import SwinUNETR
 from monai.losses import DiceLoss
 import torch
 import torch.optim
 from torch import clamp
-
-from monai.utils import LossReduction, Weight, look_up_option, pytorch_after
-
+from monai.utils import DiceCEReduction, LossReduction, Weight, look_up_option, pytorch_after
+from torch.nn.modules.loss import _Loss
+from collections.abc import Callable, Sequence
 
 from monai.transforms import (
     Compose,

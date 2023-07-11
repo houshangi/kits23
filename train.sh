@@ -1,6 +1,8 @@
-python train.py params/swin-256-2-label-smoothing.py
-python train.py params/swin-256-2-with-background.py
 
+python train.py params/swin-128bg-lr.py
+# python train.py params/swin-512bg-lr.py
+# python train.py params/swin-256-2-with-background.py
+# python train.py params/swin-256-2-label-smoothing.py
 # python train.py params/swin-256-2.py # change weights
 # python train.py params/swin-256-1.py # change spacing
 # python train.py params/swin-256.py

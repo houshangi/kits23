@@ -239,7 +239,7 @@ def train(params_path, params):
         num_sanity_val_steps=0,
         accelerator=params.PARAMS["accelerator"],
         benchmark=True,
-        check_val_every_n_epoch=2,
+        check_val_every_n_epoch=10,
         devices=params.PARAMS["devices"],
         callbacks=[LearningRateMonitor(logging_interval="step"), checkpoint_callback],
         logger=tb_logger,
