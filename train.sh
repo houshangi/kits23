@@ -1,5 +1,13 @@
+# python train.py params/swin-128bg-lr-1.py
 
-python train.py params/swin-128bg-lr.py
+python train.py params/swin-128bg-feat24.py
+##### doesn't work... python train.py params/swin-128bg-feat24-ckpt.py # continue from ckpt
+python train.py params/swin-128bg-feat12.py
+python train.py params/swin-128bg-feat36.py
+python train.py params/swin-128bg-feat48.py
+
+
+# python train.py params/swin-128bg-lr.py
 # python train.py params/swin-512bg-lr.py
 # python train.py params/swin-256-2-with-background.py
 # python train.py params/swin-256-2-label-smoothing.py
