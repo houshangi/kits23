@@ -3,6 +3,8 @@ import importlib
 from glob import glob
 from collections import OrderedDict, defaultdict
 from tqdm import tqdm
+import time
+import numpy as np
 
 import torch
 import pytorch_lightning as pl
@@ -28,8 +30,8 @@ class KITSValDataModule(pl.LightningDataModule):
             all_images = sorted(glob(DATASET_DIR+'/*/imaging.nii.gz'))
             all_labels = sorted(glob(DATASET_DIR+'/*/segmentation.nii.gz'))
 
-            val_images = all_images[int(0.8 * len(all_images)) :][:2]
-            val_labels = all_labels[int(0.8 * len(all_labels)) :][:2]
+            val_images = all_images[int(0.8 * len(all_images)) :][:5]
+            val_labels = all_labels[int(0.8 * len(all_labels)) :][:5]
             val_files = [{"image": img, "label": lbl, "case": img.split('/')[-2]} for img, lbl in zip(val_images, val_labels)]
             print("Number of validation files:", len(val_files))
             self.val_dataset = CacheDataset(val_files, transform=self.val_transforms, cache_rate=0.1)
@@ -69,8 +71,10 @@ if __name__ == "__main__":
     all_metrics = defaultdict(float)
     argmax = AsDiscrete(argmax=True, dim=1)
     
+    times = []
     with torch.no_grad():
         for i, batch in enumerate(tqdm(val_dataloader)):
+            time0 = time.time()
             image = batch["image"].as_tensor().half().to(torch.device('cuda'))
             label = batch["label"].as_tensor()
 
@@ -84,6 +88,7 @@ if __name__ == "__main__":
                     )
 
             post_outputs = postprocess(outputs.to(torch.float).cpu(), params.PARAMS['threshold'])
+            times.append(time.time()-time0)
             metrics = compute_metrics(label, post_outputs)
             for k in metrics.keys():
                 all_metrics[k] += metrics[k].item()
@@ -101,4 +106,4 @@ if __name__ == "__main__":
         all_metrics[k] = round(v/len(val_dataloader),3)
     print('Dice', all_metrics['/Dice'], '\nKidney', all_metrics['_Dice/kidney'], '\nTumor', all_metrics['_Dice/tumor'], '\nCyst', all_metrics['_Dice/cyst'])
     print('\nIoU', all_metrics['/IoU'], '\nKidney', all_metrics['_IoU/kidney'], '\nTumor', all_metrics['_IoU/tumor'], '\nCyst', all_metrics['_IoU/cyst'])
-    
+    print('\nMean Time', round(np.mean(times), 3), 's')
