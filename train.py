@@ -240,7 +240,7 @@ def train(params_path, params):
         accelerator=params.PARAMS["accelerator"],
         benchmark=True,
         check_val_every_n_epoch=10,
-        devices=params.PARAMS["devices"],
+        devices=1,
         callbacks=[LearningRateMonitor(logging_interval="step"), checkpoint_callback],
         logger=tb_logger,
         log_every_n_steps=1,
