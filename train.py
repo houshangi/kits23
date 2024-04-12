@@ -25,7 +25,7 @@ from monai.inferers import sliding_window_inference
 
 from utils import *
 
-DATASET_DIR='/kits23-dataset'
+DATASET_DIR='/content/drive/MyDrive/kits23/dataset'
 
 class KITSDataModule(pl.LightningDataModule):
     def __init__(self, params, train_transforms, val_transforms):
